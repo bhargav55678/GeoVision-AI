@@ -27,6 +27,8 @@ async def compare(
 
     return {
         "success": True,
-        "comparison_image": result,
+        "comparison_image": result["image"],
+        "changed_regions": result["changed_regions"],
+        "changed_area_percentage": result["changed_area_percentage"],
         "message": "Comparison completed successfully."
     }
