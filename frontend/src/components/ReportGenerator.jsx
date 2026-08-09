@@ -58,12 +58,16 @@ const ReportGenerator = ({ result }) => {
 
       // Fetch comparison image
       const imageUrl =
-        `http://127.0.0.1:8000/${result.comparison_image.replace(
+       `http://localhost:8000/${result.comparison_image.replace(
           /\\/g,
           "/"
         )}`;
 
-      const response = await fetch(imageUrl);
+      const response = await fetch(imageUrl, {
+  method: "GET",
+  mode: "cors",
+  credentials: "include",
+});
 
       if (!response.ok) {
         throw new Error("Could not load comparison image.");

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 const API_URL = "http://127.0.0.1:8000";
 
@@ -161,7 +162,7 @@ const History = () => {
 
                   </div>
 
-                  {/* Stats */}
+                  {/* Statistics */}
 
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
@@ -222,6 +223,19 @@ const History = () => {
                       {item.after_image}
 
                     </p>
+
+                  </div>
+
+                  {/* View Result */}
+
+                  <div className="mt-6">
+
+                    <Link
+                      to={`/history/${item.id}`}
+                      className="inline-flex items-center justify-center bg-cyan-500 hover:bg-cyan-400 text-black font-bold px-6 py-3 rounded-lg transition"
+                    >
+                      View Result →
+                    </Link>
 
                   </div>
 
