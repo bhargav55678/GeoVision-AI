@@ -3,12 +3,17 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.routes.upload import router as upload_router
 from app.routes.compare import router as compare_router
 from fastapi.staticfiles import StaticFiles
+from app.database import Base, engine
+from app.models.analysis import Analysis
+from app.routes.history import router as history_router
 
 app = FastAPI(
     title="GeoVision AI API",
     version="1.0.0",
     description="AI-Powered Satellite Change Detection Platform"
 )
+
+Base.metadata.create_all(bind=engine)
 
 app.add_middleware(
     CORSMiddleware,
@@ -46,3 +51,4 @@ def health():
 # Register routes
 app.include_router(upload_router)
 app.include_router(compare_router)
+app.include_router(history_router)

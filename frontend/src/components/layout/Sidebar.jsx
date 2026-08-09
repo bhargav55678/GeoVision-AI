@@ -1,7 +1,9 @@
 import { Link, useLocation } from "react-router-dom";
+
 import {
   LayoutDashboard,
   Search,
+  History,
   FileText,
   Settings,
 } from "lucide-react";
@@ -21,6 +23,11 @@ const Sidebar = () => {
       icon: Search,
     },
     {
+      name: "History",
+      path: "/history",
+      icon: History,
+    },
+    {
       name: "Reports",
       path: "/reports",
       icon: FileText,
@@ -33,7 +40,9 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 bg-slate-900 border-r border-cyan-500/20 min-h-screen">
+    <aside className="w-64 min-h-screen bg-slate-900 border-r border-slate-800">
+
+      {/* Logo */}
 
       <div className="p-6">
 
@@ -46,6 +55,8 @@ const Sidebar = () => {
         </p>
 
       </div>
+
+      {/* Navigation */}
 
       <nav className="mt-8">
 
@@ -63,12 +74,14 @@ const Sidebar = () => {
               }`}
             >
               <Icon size={22} />
-              {item.name}
+
+              <span>{item.name}</span>
             </Link>
           );
         })}
 
       </nav>
+
     </aside>
   );
 };
