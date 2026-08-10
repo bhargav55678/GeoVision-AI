@@ -1,11 +1,10 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-
 from app.routes.upload import router as upload_router
 from app.routes.compare import router as compare_router
 from app.routes.history import router as history_router
-
+from app.routes.analytics import router as analytics_router
 
 app = FastAPI(
     title="GeoVision AI API",
@@ -78,3 +77,4 @@ def health():
 app.include_router(upload_router)
 app.include_router(compare_router)
 app.include_router(history_router)
+app.include_router(analytics_router)
