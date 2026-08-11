@@ -91,91 +91,126 @@ const Dashboard = () => {
 
       {/* Main Content */}
 
-      <main className="flex-1 p-10">
+      <main className="flex-1 min-w-0">
 
-        {/* Header */}
+        <div className="max-w-[1600px] mx-auto px-6 md:px-10 py-8">
 
-        <h1 className="text-4xl font-bold">
+          {/* -------------------------------- */}
+          {/* Header */}
+          {/* -------------------------------- */}
 
-          Welcome to GeoVision AI
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 mb-8">
 
-        </h1>
+            <div>
 
+              <h1 className="text-3xl md:text-4xl font-bold">
+                Welcome to GeoVision AI
+              </h1>
 
-        <p className="mt-4 text-slate-400">
+              <p className="mt-2 text-slate-400">
+                Mission Control Dashboard
+              </p>
 
-          Mission Control Dashboard
-
-        </p>
-
-
-        {/* Backend Status */}
-
-        <div className="mt-6">
-
-          <span className="text-slate-400">
-
-            Backend Status:
-
-          </span>{" "}
-
-          <span
-            className={
-              backendStatus === "online"
-                ? "text-green-400 font-bold"
-                : "text-yellow-400 font-bold"
-            }
-          >
-
-            {backendStatus}
-
-          </span>
-
-        </div>
+            </div>
 
 
-        {/* Analytics */}
+            {/* Backend Status */}
 
-        {!loadingAnalytics && analytics && (
+            <div className="flex items-center gap-3 bg-slate-900 border border-slate-800 rounded-xl px-5 py-3">
 
-          <>
+              <div
+                className={`w-3 h-3 rounded-full ${
+                  backendStatus === "online"
+                    ? "bg-green-400"
+                    : "bg-yellow-400"
+                }`}
+              />
 
-            {/* Analytics Cards */}
+              <div>
 
-            <AnalyticsStats
-              data={analytics}
-            />
+                <p className="text-xs text-slate-500">
+                  Backend Status
+                </p>
 
+                <p
+                  className={
+                    backendStatus === "online"
+                      ? "text-green-400 font-semibold"
+                      : "text-yellow-400 font-semibold"
+                  }
+                >
+                  {backendStatus}
+                </p>
 
-            {/* Analysis Breakdown */}
+              </div>
 
-            <AnalysisChart
-              data={analytics}
-            />
-
-
-            {/* Analysis Trend */}
-
-            <AnalysisTrendChart
-              data={analytics}
-            />
-
-          </>
-
-        )}
-
-
-        {/* Loading */}
-
-        {loadingAnalytics && (
-
-          <div className="mt-10 text-gray-400">
-
-            Loading analytics...
+            </div>
 
           </div>
 
-        )}
+
+          {/* -------------------------------- */}
+          {/* Analytics */}
+          {/* -------------------------------- */}
+
+          {!loadingAnalytics && analytics && (
+
+            <>
+
+              {/* Analytics Cards */}
+
+              <AnalyticsStats
+                data={analytics}
+              />
+
+
+              {/* Charts */}
+
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8">
+
+                {/* Analysis Breakdown */}
+
+                <AnalysisChart
+                  data={analytics}
+                />
+
+
+                {/* Analysis Trend */}
+
+                <AnalysisTrendChart
+                  data={analytics}
+                />
+
+              </div>
+
+            </>
+
+          )}
+
+
+          {/* -------------------------------- */}
+          {/* Loading */}
+          {/* -------------------------------- */}
+
+          {loadingAnalytics && (
+
+            <div className="flex items-center justify-center py-24">
+
+              <div className="text-center">
+
+                <div className="w-10 h-10 border-4 border-slate-700 border-t-cyan-400 rounded-full animate-spin mx-auto" />
+
+                <p className="mt-4 text-slate-400">
+                  Loading analytics...
+                </p>
+
+              </div>
+
+            </div>
+
+          )}
+
+        </div>
 
       </main>
 
