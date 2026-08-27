@@ -1,1 +1,155 @@
 @import "tailwindcss";
+@keyframes scan {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(500px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes progress {
+  0% {
+    width: 10%;
+  }
+
+  50% {
+    width: 75%;
+  }
+
+  100% {
+    width: 30%;
+  }
+}
+@keyframes scan {
+  0% {
+    top: 0%;
+  }
+
+  50% {
+    top: 100%;
+  }
+
+  100% {
+    top: 0%;
+  }
+}
+
+@keyframes scanGlow {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  50% {
+    top: 90%;
+    opacity: 0.8;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 0%;
+    opacity: 0;
+  }
+}
+
+@keyframes progress {
+  0% {
+    width: 10%;
+  }
+
+  50% {
+    width: 70%;
+  }
+
+  100% {
+    width: 25%;
+  }
+}
+@keyframes scan {
+  0% {
+    top: 0%;
+  }
+
+  50% {
+    top: 100%;
+  }
+
+  100% {
+    top: 0%;
+  }
+}
+
+@keyframes scanGlow {
+  0% {
+    top: 0%;
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  50% {
+    top: 85%;
+    opacity: 0.8;
+  }
+
+  70% {
+    opacity: 1;
+  }
+
+  100% {
+    top: 0%;
+    opacity: 0;
+  }
+}
+
+@keyframes progress {
+  0% {
+    width: 10%;
+  }
+
+  50% {
+    width: 75%;
+  }
+
+  100% {
+    width: 25%;
+  }
+}
+@keyframes scan {
+  0% {
+    top: 0%;
+  }
+
+  50% {
+    top: 100%;
+  }
+
+  100% {
+    top: 0%;
+  }
+}
+
+@keyframes loading {
+  0% {
+    transform: translateX(-120%);
+  }
+
+  100% {
+    transform: translateX(400%);
+  }
+}

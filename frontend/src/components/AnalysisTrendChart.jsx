@@ -6,6 +6,7 @@ import {
   LineElement,
   Tooltip,
   Legend,
+  Filler,
 } from "chart.js";
 
 import { Line } from "react-chartjs-2";
@@ -16,7 +17,8 @@ ChartJS.register(
   PointElement,
   LineElement,
   Tooltip,
-  Legend
+  Legend,
+  Filler
 );
 
 const AnalysisTrendChart = ({ data }) => {
@@ -109,26 +111,14 @@ const AnalysisTrendChart = ({ data }) => {
     },
   };
 
-  return (
-    <div className="bg-slate-900 rounded-xl p-6 border border-slate-800 shadow-lg mt-8">
-
-      <h2 className="text-2xl font-bold text-white mb-2">
-        Analysis Trend
-      </h2>
-
-      <p className="text-slate-400 mb-6">
-        Number of analyses performed over time
-      </p>
-
-      <div className="h-80">
-        <Line
-          data={chartData}
-          options={options}
-        />
-      </div>
-
-    </div>
-  );
+ return (
+  <div className="h-80">
+    <Line
+      data={chartData}
+      options={options}
+    />
+  </div>
+);
 };
 
 export default AnalysisTrendChart;

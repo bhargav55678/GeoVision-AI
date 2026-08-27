@@ -91,32 +91,14 @@ const AnalysisChart = ({ data }) => {
   };
 
 
-  return (
-
-    <div className="bg-slate-900 rounded-xl p-6 border border-slate-800 shadow-lg mt-8">
-
-      <h2 className="text-2xl font-bold text-white mb-2">
-        Analysis Breakdown
-      </h2>
-
-
-      <p className="text-slate-400 mb-6">
-        Distribution of detected changes across all analyses
-      </p>
-
-
-      <div className="h-80 flex justify-center">
-
-        <Doughnut
-          data={chartData}
-          options={options}
-        />
-
-      </div>
-
-    </div>
-
-  );
+ return (
+  <div className="h-80 flex justify-center">
+    <Doughnut
+      data={chartData}
+      options={options}
+    />
+  </div>
+);
 
 };
 

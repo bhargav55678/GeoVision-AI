@@ -8,25 +8,96 @@ const AnalysisResultStats = ({ result }) => {
       ? "Change Detected"
       : "No Change";
 
+  const statusColor =
+    result.changed_regions > 0
+      ? "text-red-400"
+      : "text-emerald-400";
+
+  const statusDot =
+    result.changed_regions > 0
+      ? "bg-red-400"
+      : "bg-emerald-400";
+
   return (
-    <div className="bg-slate-900 rounded-xl p-6 border border-slate-800 shadow-lg">
+    <div
+      className="
+        rounded-xl
+        border
+        border-white/10
+        bg-[#111827]/80
+        p-6
+        backdrop-blur-md
+      "
+    >
 
-      <h3 className="text-2xl font-bold text-white mb-6">
-        Analysis Statistics
-      </h3>
+      {/* ================================= */}
+      {/* HEADER */}
+      {/* ================================= */}
 
+      <div className="mb-6">
+
+        <span
+          className="
+            font-mono
+            text-xs
+            font-bold
+            uppercase
+            tracking-[0.15em]
+            text-slate-400
+          "
+        >
+          Analysis Statistics
+        </span>
+
+        <p className="mt-2 text-sm text-slate-500">
+          AI detection metrics from the comparison
+        </p>
+
+      </div>
+
+
+      {/* ================================= */}
+      {/* STATISTICS */}
+      {/* ================================= */}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
 
+
         {/* Changed Regions */}
 
-        <div className="bg-slate-800 rounded-lg p-5">
+        <div
+          className="
+            rounded-lg
+            border
+            border-white/5
+            bg-slate-950/60
+            p-5
+            transition
+            hover:border-cyan-400/30
+          "
+        >
 
-          <p className="text-slate-400 text-sm">
+          <p
+            className="
+              font-mono
+              text-xs
+              uppercase
+              tracking-[0.12em]
+              text-slate-500
+            "
+          >
             Changed Regions
           </p>
 
-          <p className="text-3xl font-bold text-cyan-400 mt-2">
+          <p
+            className="
+              mt-3
+              font-mono
+              text-3xl
+              font-bold
+              text-cyan-400
+            "
+          >
             {result.changed_regions}
           </p>
 
@@ -35,13 +106,39 @@ const AnalysisResultStats = ({ result }) => {
 
         {/* Changed Area */}
 
-        <div className="bg-slate-800 rounded-lg p-5">
+        <div
+          className="
+            rounded-lg
+            border
+            border-white/5
+            bg-slate-950/60
+            p-5
+            transition
+            hover:border-cyan-400/30
+          "
+        >
 
-          <p className="text-slate-400 text-sm">
+          <p
+            className="
+              font-mono
+              text-xs
+              uppercase
+              tracking-[0.12em]
+              text-slate-500
+            "
+          >
             Changed Area
           </p>
 
-          <p className="text-3xl font-bold text-cyan-400 mt-2">
+          <p
+            className="
+              mt-3
+              font-mono
+              text-3xl
+              font-bold
+              text-cyan-400
+            "
+          >
             {result.changed_area_percentage}%
           </p>
 
@@ -50,13 +147,39 @@ const AnalysisResultStats = ({ result }) => {
 
         {/* Confidence */}
 
-        <div className="bg-slate-800 rounded-lg p-5">
+        <div
+          className="
+            rounded-lg
+            border
+            border-white/5
+            bg-slate-950/60
+            p-5
+            transition
+            hover:border-emerald-400/30
+          "
+        >
 
-          <p className="text-slate-400 text-sm">
+          <p
+            className="
+              font-mono
+              text-xs
+              uppercase
+              tracking-[0.12em]
+              text-slate-500
+            "
+          >
             Confidence
           </p>
 
-          <p className="text-3xl font-bold text-emerald-400 mt-2">
+          <p
+            className="
+              mt-3
+              font-mono
+              text-3xl
+              font-bold
+              text-emerald-400
+            "
+          >
             {result.confidence}%
           </p>
 
@@ -65,21 +188,55 @@ const AnalysisResultStats = ({ result }) => {
 
         {/* Status */}
 
-        <div className="bg-slate-800 rounded-lg p-5">
-
-          <p className="text-slate-400 text-sm">
-            Status
-          </p>
+        <div
+          className="
+            rounded-lg
+            border
+            border-white/5
+            bg-slate-950/60
+            p-5
+          "
+        >
 
           <p
-            className={`text-xl font-bold mt-3 ${
-              result.changed_regions > 0
-                ? "text-red-400"
-                : "text-green-400"
-            }`}
+            className="
+              font-mono
+              text-xs
+              uppercase
+              tracking-[0.12em]
+              text-slate-500
+            "
           >
-            {status}
+            Detection Status
           </p>
+
+
+          <div className="mt-4 flex items-center gap-3">
+
+            <span
+              className={`
+                h-3
+                w-3
+                rounded-full
+                ${statusDot}
+                shadow-[0_0_10px_currentColor]
+              `}
+            />
+
+            <span
+              className={`
+                font-mono
+                text-sm
+                font-bold
+                uppercase
+                tracking-wide
+                ${statusColor}
+              `}
+            >
+              {status}
+            </span>
+
+          </div>
 
         </div>
 
@@ -88,6 +245,5 @@ const AnalysisResultStats = ({ result }) => {
     </div>
   );
 };
-
 
 export default AnalysisResultStats;

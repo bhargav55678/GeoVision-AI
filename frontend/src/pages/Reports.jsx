@@ -1,492 +1,520 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import {
+  Search,
+  Filter,
+  FileText,
+  Eye,
+  Download,
+  AlertTriangle,
+  CheckCircle2,
+  Clock3,
+} from "lucide-react";
 
-import ReportGenerator from "../components/ReportGenerator";
-
+import Sidebar from "../components/layout/Sidebar";
 
 const API_URL = "http://127.0.0.1:8000";
 
-
 const Reports = () => {
-
   const [reports, setReports] = useState([]);
-
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [statusFilter, setStatusFilter] = useState("All");
 
-  const [error, setError] = useState("");
+  useEffect(() => {
+    loadReports();
+  }, []);
 
-
-  // -----------------------------------------
-  // Fetch analysis history
-  // -----------------------------------------
-
-  const fetchReports = async () => {
-
+  const loadReports = async () => {
     try {
-
       setLoading(true);
 
-      setError("");
-
-
-      const response = await fetch(
-        `${API_URL}/history/`
-      );
-
+      const response = await fetch(`${API_URL}/history/`);
 
       if (!response.ok) {
-
-        throw new Error(
-          "Failed to load reports."
-        );
-
+        throw new Error("Failed to load reports");
       }
-
 
       const data = await response.json();
 
-      setReports(data);
-
-    } catch (err) {
-
-      console.error(
-        "REPORTS ERROR:",
-        err
-      );
-
-      setError(
-        "Unable to load reports."
-      );
-
+      setReports(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Reports loading error:", error);
     } finally {
-
       setLoading(false);
-
     }
-
   };
 
+  const getImageUrl = (filename) => {
+    if (!filename) return null;
 
-  useEffect(() => {
+    const cleanPath = filename
+      .replace(/\\/g, "/")
+      .replace(/^\/+/, "");
 
-    fetchReports();
+    if (cleanPath.startsWith("uploads/")) {
+      return `${API_URL}/${cleanPath}`;
+    }
 
-  }, []);
+    return `${API_URL}/uploads/${cleanPath}`;
+  };
 
+  const filteredReports = useMemo(() => {
+    return reports.filter((report) => {
+      const searchText = search.toLowerCase();
 
-  // -----------------------------------------
-  // Format date
-  // -----------------------------------------
+      const matchesSearch =
+        String(report.id).includes(searchText) ||
+        report.status?.toLowerCase().includes(searchText) ||
+        String(report.changed_regions).includes(searchText);
+
+      const matchesStatus =
+        statusFilter === "All" ||
+        report.status === statusFilter;
+
+      return matchesSearch && matchesStatus;
+    });
+  }, [reports, search, statusFilter]);
 
   const formatDate = (date) => {
-
-    if (!date) {
-      return "Unknown";
-    }
+    if (!date) return "Unknown date";
 
     return new Date(date).toLocaleString();
-
   };
 
+  const isDetected = (report) => {
+    return (
+      report.status?.toLowerCase() === "change detected" ||
+      report.changed_regions > 0
+    );
+  };
 
   return (
+    <div className="min-h-screen bg-[#10141a] text-[#dfe2eb]">
 
-    <div className="min-h-screen bg-slate-950 text-white">
+      <Sidebar />
 
-      <main className="max-w-[1400px] mx-auto px-6 md:px-10 py-10">
+      <main className="ml-80 min-h-screen">
 
-
-        {/* ================================= */}
         {/* HEADER */}
-        {/* ================================= */}
 
-        <div className="mb-10">
+        <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b border-white/10 bg-[#10141a]/90 px-8 backdrop-blur-xl">
 
-          <h1 className="text-4xl md:text-5xl font-bold text-cyan-400">
-
-            Reports
-
-          </h1>
-
-
-          <p className="text-slate-400 mt-3 text-lg">
-
-            Generate and download reports from your completed analyses
-
-          </p>
-
-        </div>
-
-
-
-        {/* ================================= */}
-        {/* LOADING */}
-        {/* ================================= */}
-
-        {loading && (
-
-          <div className="flex justify-center py-24">
-
-            <div className="text-center">
-
-              <div className="
-                animate-spin
-                rounded-full
-                h-12
-                w-12
-                border-4
-                border-slate-700
-                border-t-cyan-400
-                mx-auto
-              " />
-
-              <p className="mt-4 text-slate-400">
-
-                Loading reports...
-
-              </p>
-
-            </div>
-
-          </div>
-
-        )}
-
-
-
-        {/* ================================= */}
-        {/* ERROR */}
-        {/* ================================= */}
-
-        {!loading && error && (
-
-          <div className="
-            bg-red-500/10
-            border
-            border-red-500/40
-            rounded-xl
-            p-8
-            text-center
-          ">
-
-            <h2 className="text-xl font-semibold text-red-400">
-
-              Unable to load reports
-
-            </h2>
-
-
-            <p className="text-slate-400 mt-2">
-
-              {error}
-
+          <div>
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-cyan-400">
+              GeoVision AI
             </p>
+          </div>
 
+          <div className="relative w-80">
 
-            <button
-              onClick={fetchReports}
+            <Search
+              size={18}
+              className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500"
+            />
+
+            <input
+              type="text"
+              placeholder="Search reports..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
               className="
-                mt-5
-                bg-cyan-500
-                hover:bg-cyan-400
-                text-black
-                font-bold
-                px-6
-                py-3
-                rounded-lg
+                w-full
+                rounded-full
+                border
+                border-white/10
+                bg-[#181c22]
+                py-2.5
+                pl-11
+                pr-4
+                text-sm
+                text-white
+                outline-none
+                transition
+                placeholder:text-slate-500
+                focus:border-cyan-400/50
+                focus:ring-1
+                focus:ring-cyan-400/30
               "
-            >
-
-              Try Again
-
-            </button>
+            />
 
           </div>
 
-        )}
+        </header>
 
 
+        {/* CONTENT */}
 
-        {/* ================================= */}
-        {/* EMPTY */}
-        {/* ================================= */}
+        <section className="relative px-8 py-10">
 
-        {!loading &&
-          !error &&
-          reports.length === 0 && (
+          {/* subtle background */}
 
-            <div className="
-              bg-slate-900
-              border
-              border-slate-800
-              rounded-2xl
-              p-14
-              text-center
-            ">
-
-              <h2 className="text-2xl font-semibold">
-
-                No Reports Available
-
-              </h2>
+          <div className="pointer-events-none absolute inset-0 opacity-20">
+            <div className="absolute right-0 top-0 h-96 w-96 rounded-full bg-cyan-500/10 blur-[120px]" />
+          </div>
 
 
-              <p className="text-slate-400 mt-3">
+          <div className="relative">
 
-                Complete an image comparison to generate your first report.
+            {/* TITLE */}
 
-              </p>
+            <div className="mb-8 flex items-end justify-between">
 
+              <div>
 
-              <Link
-                to="/analysis"
-                className="
-                  inline-flex
-                  mt-6
-                  bg-cyan-500
-                  hover:bg-cyan-400
-                  text-black
-                  font-bold
-                  px-6
-                  py-3
-                  rounded-lg
-                "
-              >
+                <p className="mb-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-cyan-400">
+                  Intelligence Archive
+                </p>
 
-                Start Analysis
+                <h1 className="font-[Space_Grotesk] text-4xl font-bold">
+                  Analysis Reports
+                </h1>
 
-              </Link>
+                <p className="mt-2 text-slate-400">
+                  Review and export previous satellite image comparisons.
+                </p>
 
-            </div>
-
-          )}
+              </div>
 
 
+              {/* FILTER */}
 
-        {/* ================================= */}
-        {/* REPORT LIST */}
-        {/* ================================= */}
+              <div className="relative">
 
-        {!loading &&
-          !error &&
-          reports.length > 0 && (
+                <Filter
+                  size={16}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400"
+                />
 
-            <div className="space-y-5">
-
-              {reports.map((report) => (
-
-                <div
-                  key={report.id}
+                <select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
                   className="
-                    bg-slate-900
+                    appearance-none
+                    rounded-md
                     border
-                    border-slate-800
-                    rounded-2xl
-                    p-6
-                    shadow-lg
-                    hover:border-cyan-500/40
-                    transition
+                    border-white/10
+                    bg-[#181c22]
+                    py-3
+                    pl-10
+                    pr-10
+                    font-mono
+                    text-xs
+                    font-bold
+                    uppercase
+                    tracking-wider
+                    text-slate-200
+                    outline-none
+                    focus:border-cyan-400
                   "
                 >
 
-                  <div className="
-                    flex
-                    flex-col
-                    lg:flex-row
-                    lg:items-center
-                    gap-6
-                  ">
+                  <option value="All">
+                    All Statuses
+                  </option>
 
+                  <option value="Change Detected">
+                    Change Detected
+                  </option>
 
-                    {/* ================================= */}
-                    {/* REPORT INFO */}
-                    {/* ================================= */}
+                  <option value="No Change">
+                    No Change
+                  </option>
 
-                    <div className="flex-1">
+                </select>
 
-                      <div className="
-                        flex
-                        flex-col
-                        sm:flex-row
-                        sm:items-center
-                        gap-3
-                      ">
-
-                        <h2 className="text-2xl font-bold">
-
-                          Analysis Report #{report.id}
-
-                        </h2>
-
-
-                        <span
-                          className={
-                            report.status === "Change Detected"
-                              ? `
-                                w-fit
-                                bg-red-500/20
-                                text-red-400
-                                border
-                                border-red-500/30
-                                px-3
-                                py-1
-                                rounded-full
-                                text-sm
-                                font-semibold
-                              `
-                              : `
-                                w-fit
-                                bg-green-500/20
-                                text-green-400
-                                border
-                                border-green-500/30
-                                px-3
-                                py-1
-                                rounded-full
-                                text-sm
-                                font-semibold
-                              `
-                          }
-                        >
-
-                          {report.status}
-
-                        </span>
-
-                      </div>
-
-
-                      <p className="text-slate-500 text-sm mt-2">
-
-                        {formatDate(report.created_at)}
-
-                      </p>
-
-
-
-                      {/* Statistics */}
-
-                      <div className="
-                        grid
-                        grid-cols-1
-                        sm:grid-cols-3
-                        gap-4
-                        mt-6
-                      ">
-
-
-                        <div className="bg-slate-800 rounded-xl p-4">
-
-                          <p className="text-slate-400 text-sm">
-
-                            Changed Regions
-
-                          </p>
-
-                          <p className="text-2xl font-bold text-cyan-400 mt-1">
-
-                            {report.changed_regions}
-
-                          </p>
-
-                        </div>
-
-
-                        <div className="bg-slate-800 rounded-xl p-4">
-
-                          <p className="text-slate-400 text-sm">
-
-                            Changed Area
-
-                          </p>
-
-                          <p className="text-2xl font-bold text-cyan-400 mt-1">
-
-                            {report.changed_area_percentage}%
-
-                          </p>
-
-                        </div>
-
-
-                        <div className="bg-slate-800 rounded-xl p-4">
-
-                          <p className="text-slate-400 text-sm">
-
-                            Confidence
-
-                          </p>
-
-                          <p className="text-2xl font-bold text-emerald-400 mt-1">
-
-                            {report.confidence}%
-
-                          </p>
-
-                        </div>
-
-                      </div>
-
-                    </div>
-
-
-
-                    {/* ================================= */}
-                    {/* ACTIONS */}
-                    {/* ================================= */}
-
-                    <div className="
-                      flex
-                      flex-col
-                      gap-3
-                      lg:w-52
-                    ">
-
-                      <Link
-                        to={`/history/${report.id}`}
-                        className="
-                          text-center
-                          bg-slate-800
-                          hover:bg-slate-700
-                          border
-                          border-slate-700
-                          text-white
-                          font-semibold
-                          px-5
-                          py-3
-                          rounded-lg
-                          transition
-                        "
-                      >
-
-                        View Result
-
-                      </Link>
-
-
-                      <ReportGenerator
-                        result={report}
-                      />
-
-                    </div>
-
-                  </div>
-
-                </div>
-
-              ))}
+              </div>
 
             </div>
 
-          )}
+
+            {/* LOADING */}
+
+            {loading && (
+
+              <div className="flex min-h-[400px] items-center justify-center">
+
+                <div className="text-center">
+
+                  <div className="mx-auto mb-4 h-10 w-10 animate-spin rounded-full border-2 border-slate-700 border-t-cyan-400" />
+
+                  <p className="font-mono text-xs uppercase tracking-widest text-cyan-400">
+                    Loading intelligence records...
+                  </p>
+
+                </div>
+
+              </div>
+
+            )}
+
+
+            {/* EMPTY */}
+
+            {!loading && filteredReports.length === 0 && (
+
+              <div className="
+                rounded-xl
+                border
+                border-white/10
+                bg-[#111827]/80
+                px-8
+                py-20
+                text-center
+                backdrop-blur-md
+              ">
+
+                <FileText
+                  size={42}
+                  className="mx-auto mb-5 text-slate-600"
+                />
+
+                <h2 className="text-xl font-semibold">
+                  No reports found
+                </h2>
+
+                <p className="mt-2 text-sm text-slate-500">
+                  No analysis records match your current search or filter.
+                </p>
+
+              </div>
+
+            )}
+
+
+            {/* REPORT LIST */}
+
+            {!loading && filteredReports.length > 0 && (
+
+              <div className="space-y-5">
+
+                {filteredReports.map((report) => {
+
+                  const detected = isDetected(report);
+
+                  return (
+
+                    <article
+                      key={report.id}
+                      className={`
+                        group
+                        relative
+                        overflow-hidden
+                        rounded-xl
+                        border
+                        bg-[#111827]/80
+                        p-5
+                        backdrop-blur-md
+                        transition-all
+                        duration-200
+                        ${
+                          detected
+                            ? "border-white/10 hover:border-red-400/40"
+                            : "border-white/10 hover:border-cyan-400/40"
+                        }
+                      `}
+                    >
+
+                      {/* STATUS STRIPE */}
+
+                      <div
+                        className={`
+                          absolute
+                          left-0
+                          top-0
+                          h-full
+                          w-1
+                          ${
+                            detected
+                              ? "bg-red-400"
+                              : "bg-emerald-400"
+                          }
+                        `}
+                      />
+
+
+                      <div className="grid gap-6 lg:grid-cols-[220px_1fr_auto]">
+
+                        {/* IMAGE */}
+
+                        <div className="overflow-hidden rounded-lg border border-white/10 bg-[#0a0e14]">
+
+                          <img
+                            src={
+                              getImageUrl(
+                                report.comparison_image
+                              )
+                            }
+                            alt="Comparison result"
+                            className="
+                              h-40
+                              w-full
+                              object-cover
+                              transition
+                              duration-500
+                              group-hover:scale-[1.03]
+                            "
+                          />
+
+                        </div>
+
+
+                        {/* DETAILS */}
+
+                        <div>
+
+                          <div className="mb-4 flex flex-wrap items-center gap-3">
+
+                            <span className="font-mono text-sm font-bold text-cyan-400">
+                              #GV-{String(report.id).padStart(4, "0")}
+                            </span>
+
+                            <span className="text-slate-500">
+                              /
+                            </span>
+
+                            <span className="font-mono text-xs text-slate-400">
+                              {formatDate(report.created_at)}
+                            </span>
+
+                            <span
+                              className={`
+                                ml-auto
+                                inline-flex
+                                items-center
+                                gap-2
+                                rounded
+                                border
+                                px-3
+                                py-1
+                                font-mono
+                                text-[11px]
+                                font-bold
+                                uppercase
+                                tracking-wider
+                                ${
+                                  detected
+                                    ? "border-red-400/30 bg-red-400/10 text-red-400"
+                                    : "border-emerald-400/30 bg-emerald-400/10 text-emerald-400"
+                                }
+                              `}
+                            >
+
+                              {detected ? (
+                                <AlertTriangle size={13} />
+                              ) : (
+                                <CheckCircle2 size={13} />
+                              )}
+
+                              {report.status}
+
+                            </span>
+
+                          </div>
+
+
+                          {/* METRICS */}
+
+                          <div className="grid max-w-2xl grid-cols-3 gap-3">
+
+                            <div className="rounded-md bg-[#0a0e14]/80 p-4">
+
+                              <p className="font-mono text-[10px] uppercase tracking-wider text-slate-500">
+                                Changed Area
+                              </p>
+
+                              <p className="mt-1 font-mono text-xl font-bold text-cyan-400">
+                                {report.changed_area_percentage ?? 0}%
+                              </p>
+
+                            </div>
+
+
+                            <div className="rounded-md bg-[#0a0e14]/80 p-4">
+
+                              <p className="font-mono text-[10px] uppercase tracking-wider text-slate-500">
+                                Confidence
+                              </p>
+
+                              <p className="mt-1 font-mono text-xl font-bold text-emerald-400">
+                                {report.confidence ?? 0}%
+                              </p>
+
+                            </div>
+
+
+                            <div className="rounded-md bg-[#0a0e14]/80 p-4">
+
+                              <p className="font-mono text-[10px] uppercase tracking-wider text-slate-500">
+                                Regions
+                              </p>
+
+                              <p className="mt-1 font-mono text-xl font-bold text-slate-200">
+                                {report.changed_regions ?? 0}
+                              </p>
+
+                            </div>
+
+                          </div>
+
+                        </div>
+
+
+                        {/* ACTION */}
+
+                        <div className="flex items-center lg:justify-end">
+
+                          <Link
+                            to={`/history/${report.id}`}
+                            className="
+                              inline-flex
+                              items-center
+                              gap-2
+                              rounded-md
+                              border
+                              border-cyan-400
+                              bg-cyan-400
+                              px-5
+                              py-3
+                              font-mono
+                              text-xs
+                              font-bold
+                              uppercase
+                              tracking-wider
+                              text-[#00363a]
+                              transition
+                              hover:bg-cyan-300
+                            "
+                          >
+
+                            <Eye size={16} />
+
+                            View Result
+
+                          </Link>
+
+                        </div>
+
+                      </div>
+
+                    </article>
+
+                  );
+
+                })}
+
+              </div>
+
+            )}
+
+          </div>
+
+        </section>
 
       </main>
 
     </div>
-
   );
-
 };
-
 
 export default Reports;
