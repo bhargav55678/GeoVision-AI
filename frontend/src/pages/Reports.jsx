@@ -13,7 +13,7 @@ import {
 
 import Sidebar from "../components/layout/Sidebar";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "http://127https://geovision-ai-f3h3.onrender.com.0.0.1:8000";
 
 const Reports = () => {
   const [reports, setReports] = useState([]);

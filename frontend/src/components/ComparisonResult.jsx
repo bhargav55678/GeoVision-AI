@@ -11,7 +11,7 @@ const ComparisonResult = ({ result }) => {
   );
 
   const imageUrl =
-    `http://127.0.0.1:8000/${imagePath}`;
+    `https://geovision-ai-f3h3.onrender.com/${imagePath}`;
 
   return (
     <div

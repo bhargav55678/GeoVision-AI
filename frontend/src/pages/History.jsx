@@ -15,7 +15,7 @@ import {
   Activity,
 } from "lucide-react";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://geovision-ai-f3h3.onrender.com";
 
 const History = () => {
   const [history, setHistory] = useState([]);

@@ -15,7 +15,7 @@ import AnalyticsStats from "../components/AnalyticsStats";
 import AnalysisChart from "../components/AnalysisChart";
 import AnalysisTrendChart from "../components/AnalysisTrendChart";
 
-const API_URL = "http://127.0.0.1:8000";
+const API_URL = "https://geovision-ai-f3h3.onrender.com";
 
 const Dashboard = () => {
 
@@ -218,7 +218,7 @@ const Dashboard = () => {
   "
   style={{
     backgroundImage:
-      "url('http://127.0.0.1:8000/uploads/earth.jpg')",
+      "url('https://geovision-ai-f3h3.onrender.com/uploads/earth.jpg')",
   }}
 />
 
