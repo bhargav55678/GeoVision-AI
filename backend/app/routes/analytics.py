@@ -2,8 +2,10 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
+from app.auth import get_current_user
 from app.database import get_db
 from app.models.analysis import Analysis
+from app.models.user import User
 
 
 router = APIRouter(
@@ -14,8 +16,10 @@ router = APIRouter(
 
 @router.get("/")
 def get_analytics(
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
+    user_filter = Analysis.user_id == current_user.id
 
     # -----------------------------------------
     # Total analyses
@@ -23,6 +27,7 @@ def get_analytics(
 
     total_analyses = (
         db.query(Analysis)
+        .filter(user_filter)
         .count()
     )
 
@@ -34,6 +39,7 @@ def get_analytics(
     changes_detected = (
         db.query(Analysis)
         .filter(
+            user_filter,
             Analysis.status == "Change Detected"
         )
         .count()
@@ -47,6 +53,7 @@ def get_analytics(
     no_change = (
         db.query(Analysis)
         .filter(
+            user_filter,
             Analysis.status == "No Change"
         )
         .count()
@@ -63,6 +70,7 @@ def get_analytics(
                 Analysis.changed_area_percentage
             )
         )
+        .filter(user_filter)
         .scalar()
     )
 
@@ -77,6 +85,7 @@ def get_analytics(
                 Analysis.confidence
             )
         )
+        .filter(user_filter)
         .scalar()
     )
 
@@ -90,6 +99,7 @@ def get_analytics(
             func.date(Analysis.created_at).label("date"),
             func.count(Analysis.id).label("count")
         )
+        .filter(user_filter)
         .group_by(
             func.date(Analysis.created_at)
         )

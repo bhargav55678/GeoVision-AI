@@ -1,55 +1,31 @@
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, Depends, File, UploadFile
 from sqlalchemy.orm import Session
 
+from app.auth import get_current_user
 from app.services.comparison import compare_images
 from app.database import get_db
 from app.models.analysis import Analysis
-
-import shutil
-import os
+from app.models.user import User
+from app.storage import save_upload
 
 
 router = APIRouter()
-
-UPLOAD_FOLDER = "uploads"
-
 
 @router.post("/compare")
 async def compare(
     before: UploadFile = File(...),
     after: UploadFile = File(...),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
-
-    # Save uploaded images
-
-    before_path = os.path.join(
-        UPLOAD_FOLDER,
-        before.filename
-    )
-
-    after_path = os.path.join(
-        UPLOAD_FOLDER,
-        after.filename
-    )
-
-    with open(before_path, "wb") as buffer:
-        shutil.copyfileobj(
-            before.file,
-            buffer
-        )
-
-    with open(after_path, "wb") as buffer:
-        shutil.copyfileobj(
-            after.file,
-            buffer
-        )
+    before_filename = save_upload(before)
+    after_filename = save_upload(after)
 
     # Run image comparison
 
     result = compare_images(
-        before.filename,
-        after.filename
+        before_filename,
+        after_filename
     )
 
     # Determine status
@@ -63,15 +39,16 @@ async def compare(
     # Save analysis to database
 
     analysis = Analysis(
-        before_image=before.filename,
-        after_image=after.filename,
+        before_image=before_filename,
+        after_image=after_filename,
         comparison_image=result["image"],
         changed_regions=result["changed_regions"],
         changed_area_percentage=result[
             "changed_area_percentage"
         ],
         status=status,
-        confidence=98.0
+        confidence=98.0,
+        user_id=current_user.id,
     )
 
     db.add(analysis)

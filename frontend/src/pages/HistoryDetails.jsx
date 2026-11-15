@@ -13,7 +13,9 @@ import {
 } from "lucide-react";
 
 import Sidebar from "../components/layout/Sidebar";
-import { API_BASE_URL } from "../config";
+import { getProtectedFilePath } from "../config";
+import { apiFetch } from "../api";
+import ProtectedImage from "../components/ProtectedImage";
 
 const HistoryDetails = () => {
   const { id } = useParams();
@@ -29,9 +31,7 @@ const HistoryDetails = () => {
     try {
       setLoading(true);
 
-      const response = await fetch(
-        `${API_BASE_URL}/history/${id}`
-      );
+      const response = await apiFetch(`/history/${id}`);
 
       if (!response.ok) {
         throw new Error("Analysis not found");
@@ -58,11 +58,7 @@ const HistoryDetails = () => {
       .replace(/\\/g, "/")
       .replace(/^\/+/, "");
 
-    if (cleanPath.startsWith("uploads/")) {
-      return `${API_BASE_URL}/${cleanPath}`;
-    }
-
-    return `${API_BASE_URL}/uploads/${cleanPath}`;
+    return getProtectedFilePath(cleanPath);
   };
 
   const detected =
@@ -83,7 +79,7 @@ const HistoryDetails = () => {
         analysis.comparison_image
       );
 
-      const response = await fetch(imageUrl);
+      const response = await apiFetch(imageUrl);
 
       if (!response.ok) {
         throw new Error(
@@ -562,8 +558,8 @@ const HistoryDetails = () => {
                 ">
 
                   {analysis.before_image ? (
-                    <img
-                      src={getImageUrl(
+                    <ProtectedImage
+                      path={getImageUrl(
                         analysis.before_image
                       )}
                       alt="Before"
@@ -670,8 +666,8 @@ const HistoryDetails = () => {
                 ">
 
                   {analysis.after_image ? (
-                    <img
-                      src={getImageUrl(
+                    <ProtectedImage
+                      path={getImageUrl(
                         analysis.after_image
                       )}
                       alt="After"
@@ -792,8 +788,8 @@ const HistoryDetails = () => {
               ">
 
                 {analysis.comparison_image ? (
-                  <img
-                    src={getImageUrl(
+                  <ProtectedImage
+                    path={getImageUrl(
                       analysis.comparison_image
                     )}
                     alt="Comparison Result"

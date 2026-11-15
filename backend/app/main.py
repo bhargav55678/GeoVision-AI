@@ -1,16 +1,23 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
+from fastapi import HTTPException
+from fastapi.responses import FileResponse
 from app.routes.upload import router as upload_router
 from app.routes.compare import router as compare_router
 from app.routes.history import router as history_router
 from app.routes.analytics import router as analytics_router
+from app.routes.auth import router as auth_router
+from app.routes.files import router as files_router
+from pathlib import Path
+from app.migrations import initialize_database
 
 app = FastAPI(
     title="GeoVision AI API",
     version="1.0.0",
     description="AI-Powered Satellite Change Detection Platform"
 )
+
+initialize_database()
 
 
 # --------------------------------------------------
@@ -33,14 +40,19 @@ app.add_middleware(
 
 
 # --------------------------------------------------
-# Static files
+# Public static artwork
 # --------------------------------------------------
 
-app.mount(
-    "/uploads",
-    StaticFiles(directory="uploads"),
-    name="uploads"
-)
+@app.get("/public-assets/{filename}")
+def get_public_asset(filename: str):
+    if filename not in {"earth.jpg", "earth2.jpg"}:
+        raise HTTPException(status_code=404, detail="Asset not found")
+
+    path = Path("uploads") / filename
+    if not path.is_file():
+        raise HTTPException(status_code=404, detail="Asset not found")
+
+    return FileResponse(path)
 
 
 # --------------------------------------------------
@@ -79,3 +91,5 @@ app.include_router(upload_router)
 app.include_router(compare_router)
 app.include_router(history_router)
 app.include_router(analytics_router)
+app.include_router(auth_router)
+app.include_router(files_router)

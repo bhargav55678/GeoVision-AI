@@ -14,7 +14,9 @@ import {
   ChevronDown,
   Activity,
 } from "lucide-react";
-import { API_BASE_URL } from "../config";
+import { getProtectedFilePath } from "../config";
+import { apiFetch } from "../api";
+import ProtectedImage from "../components/ProtectedImage";
 
 const History = () => {
   const [history, setHistory] = useState([]);
@@ -36,7 +38,7 @@ const History = () => {
       setLoading(true);
       setError("");
 
-      const response = await fetch(`${API_BASE_URL}/history/`);
+      const response = await apiFetch("/history/");
 
       if (!response.ok) {
         throw new Error("Failed to load analysis history.");
@@ -1031,8 +1033,8 @@ const History = () => {
 
                           {imagePath ? (
 
-                            <img
-                              src={`${API_BASE_URL}/${imagePath}`}
+                            <ProtectedImage
+                              path={getProtectedFilePath(imagePath)}
                               alt={`Analysis ${item.id}`}
                               className={`
                                 h-full

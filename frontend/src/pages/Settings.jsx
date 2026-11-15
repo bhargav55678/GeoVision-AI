@@ -14,6 +14,7 @@ import {
 
 import Sidebar from "../components/layout/Sidebar";
 import { API_BASE_URL } from "../config";
+import { apiFetch } from "../api";
 
 const Settings = () => {
   const [backendStatus, setBackendStatus] = useState("Checking...");
@@ -33,7 +34,7 @@ const Settings = () => {
       setChecking(true);
       setBackendStatus("Checking...");
 
-      const response = await fetch(`${API_BASE_URL}/health`);
+      const response = await apiFetch("/health");
 
       if (!response.ok) {
         throw new Error("Backend unavailable");

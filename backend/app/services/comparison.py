@@ -227,7 +227,7 @@ def compare_images(before_filename, after_filename):
     # -----------------------------------------
 
     return {
-        "image": output_path,
+        "image": output_path.replace(os.sep, "/"),
         "changed_regions": changed_regions,
         "changed_area_percentage": round(
             percentage,

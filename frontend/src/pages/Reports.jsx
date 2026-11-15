@@ -12,7 +12,9 @@ import {
 } from "lucide-react";
 
 import Sidebar from "../components/layout/Sidebar";
-import { API_BASE_URL } from "../config";
+import { getProtectedFilePath } from "../config";
+import { apiFetch } from "../api";
+import ProtectedImage from "../components/ProtectedImage";
 
 const Reports = () => {
   const [reports, setReports] = useState([]);
@@ -28,7 +30,7 @@ const Reports = () => {
     try {
       setLoading(true);
 
-      const response = await fetch(`${API_BASE_URL}/history/`);
+      const response = await apiFetch("/history/");
 
       if (!response.ok) {
         throw new Error("Failed to load reports");
@@ -51,11 +53,7 @@ const Reports = () => {
       .replace(/\\/g, "/")
       .replace(/^\/+/, "");
 
-    if (cleanPath.startsWith("uploads/")) {
-      return `${API_BASE_URL}/${cleanPath}`;
-    }
-
-    return `${API_BASE_URL}/uploads/${cleanPath}`;
+    return getProtectedFilePath(cleanPath);
   };
 
   const filteredReports = useMemo(() => {
@@ -338,12 +336,10 @@ const Reports = () => {
 
                         <div className="overflow-hidden rounded-lg border border-white/10 bg-[#0a0e14]">
 
-                          <img
-                            src={
-                              getImageUrl(
-                                report.comparison_image
-                              )
-                            }
+                          <ProtectedImage
+                            path={getImageUrl(
+                              report.comparison_image
+                            )}
                             alt="Comparison result"
                             className="
                               h-40

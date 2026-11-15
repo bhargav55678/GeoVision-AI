@@ -15,6 +15,7 @@ import AnalyticsStats from "../components/AnalyticsStats";
 import AnalysisChart from "../components/AnalysisChart";
 import AnalysisTrendChart from "../components/AnalysisTrendChart";
 import { API_BASE_URL } from "../config";
+import { apiFetch } from "../api";
 
 const Dashboard = () => {
 
@@ -47,9 +48,7 @@ const Dashboard = () => {
         // Analytics
         // -----------------------------
 
-        const response = await fetch(
-          `${API_BASE_URL}/analytics/`
-        );
+        const response = await apiFetch("/analytics/");
 
         if (!response.ok) {
           throw new Error(
@@ -217,7 +216,7 @@ const Dashboard = () => {
   "
   style={{
     backgroundImage:
-      `url('${API_BASE_URL}/uploads/earth.jpg')`,
+      `url('${API_BASE_URL}/public-assets/earth.jpg')`,
   }}
 />
 
@@ -566,9 +565,7 @@ const RecentAnalyses = () => {
 
       try {
 
-        const response = await fetch(
-          `${API_BASE_URL}/history/`
-        );
+        const response = await apiFetch("/history/");
 
         if (!response.ok) {
           return;

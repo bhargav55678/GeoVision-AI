@@ -14,6 +14,7 @@ frontend/node_modules/
 
 # Uploads
 backend/uploads/
+backend/geovision.backup-*.db
 
 # OS
 .DS_Store

@@ -17,7 +17,8 @@ import ComparisonResult from "../components/ComparisonResult";
 import AnalysisResultStats from "../components/AnalysisResultStats";
 import ActionButtons from "../components/ActionButtons";
 import ReportGenerator from "../components/ReportGenerator";
-import { API_BASE_URL } from "../config";
+import { API_BASE_URL, getProtectedFilePath } from "../config";
+import { apiFetch } from "../api";
 
 
 const Analysis = () => {
@@ -652,7 +653,7 @@ const Analysis = () => {
           "
           style={{
             backgroundImage:
-              `url('${API_BASE_URL}/uploads/earth.jpg')`,
+              `url('${API_BASE_URL}/public-assets/earth.jpg')`,
           }}
         />
 
@@ -934,7 +935,7 @@ const Analysis = () => {
                   "
                   style={{
                     backgroundImage:
-                      `url('${API_BASE_URL}/uploads/earth.jpg')`,
+                      `url('${API_BASE_URL}/public-assets/earth.jpg')`,
                   }}
                 >
 
@@ -1125,21 +1126,28 @@ const Analysis = () => {
 
 
                   <ActionButtons
-                    downloadResult={() => {
-
+                    downloadResult={async () => {
                       if (!result) return;
 
-                      const imagePath =
-                        result.comparison_image.replace(
-                          /\\/g,
-                          "/"
-                        );
-
-                      window.open(
-                        `${API_BASE_URL}/${imagePath}`,
-                        "_blank"
+                      const imagePath = result.comparison_image.replace(
+                        /\\/g,
+                        "/"
                       );
+                      const response = await apiFetch(
+                        getProtectedFilePath(imagePath)
+                      );
+                      if (!response.ok) {
+                        throw new Error("Unable to download the result");
+                      }
 
+                      const url = window.URL.createObjectURL(
+                        await response.blob()
+                      );
+                      const link = document.createElement("a");
+                      link.href = url;
+                      link.download = "GeoVision-comparison.png";
+                      link.click();
+                      window.URL.revokeObjectURL(url);
                     }}
 
                     handleReset={handleReset}

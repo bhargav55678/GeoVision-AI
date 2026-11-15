@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, Float, String, DateTime
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
 from datetime import datetime
 
 from app.database import Base
@@ -52,3 +53,12 @@ class Analysis(Base):
         DateTime,
         default=datetime.utcnow
     )
+
+    user_id = Column(
+        Integer,
+        ForeignKey("users.id"),
+        nullable=True,
+        index=True
+    )
+
+    user = relationship("User", back_populates="analyses")

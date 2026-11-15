@@ -1,5 +1,6 @@
 import { PhotoIcon } from "@heroicons/react/24/outline";
-import { API_BASE_URL } from "../config";
+import { getProtectedFilePath } from "../config";
+import ProtectedImage from "./ProtectedImage";
 
 const ComparisonResult = ({ result }) => {
   if (!result) {
@@ -10,10 +11,6 @@ const ComparisonResult = ({ result }) => {
     /\\/g,
     "/"
   );
-
-  const imageUrl = imagePath.startsWith("uploads/")
-    ? `${API_BASE_URL}/${imagePath}`
-    : `${API_BASE_URL}/uploads/${imagePath}`;
 
   return (
     <div
@@ -107,8 +104,8 @@ const ComparisonResult = ({ result }) => {
         {/* IMAGE */}
         {/* ================================= */}
 
-        <img
-          src={imageUrl}
+        <ProtectedImage
+          path={getProtectedFilePath(imagePath)}
           alt="Comparison Result"
           className="
             block

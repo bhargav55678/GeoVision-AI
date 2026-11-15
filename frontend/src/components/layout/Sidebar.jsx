@@ -8,9 +8,11 @@ import {
   Settings,
   Radio,
 } from "lucide-react";
+import { useAuth } from "../../auth/useAuth";
 
 const Sidebar = () => {
   const location = useLocation();
+  const { user, logout } = useAuth();
 
   const menuItems = [
     {
@@ -88,6 +90,21 @@ const Sidebar = () => {
         >
           Mission Control
         </p>
+
+        <div className="mt-6 flex items-center justify-between gap-3 rounded-md border border-cyan-400/10 bg-slate-900/40 px-4 py-3">
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-slate-200">
+              {user?.full_name}
+            </p>
+            <p className="truncate text-xs text-slate-500">{user?.email}</p>
+          </div>
+          <button
+            onClick={logout}
+            className="text-xs font-bold uppercase tracking-wider text-cyan-400 hover:text-cyan-300"
+          >
+            Logout
+          </button>
+        </div>
 
       </div>
 

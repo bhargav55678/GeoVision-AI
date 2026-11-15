@@ -1,6 +1,7 @@
 import jsPDF from "jspdf";
 import { DocumentArrowDownIcon } from "@heroicons/react/24/outline";
-import { API_BASE_URL } from "../config";
+import { getProtectedFilePath } from "../config";
+import { apiFetch } from "../api";
 
 const ReportGenerator = ({ result }) => {
 
@@ -104,15 +105,10 @@ const ReportGenerator = ({ result }) => {
       const imagePath = result.comparison_image
         .replace(/\\/g, "/")
         .replace(/^\/+/, "");
-      const imageUrl = imagePath.startsWith("uploads/")
-        ? `${API_BASE_URL}/${imagePath}`
-        : `${API_BASE_URL}/uploads/${imagePath}`;
+      const imageUrl = getProtectedFilePath(imagePath);
 
 
-      const response = await fetch(imageUrl, {
-        method: "GET",
-        mode: "cors",
-      });
+      const response = await apiFetch(imageUrl);
 
 
       if (!response.ok) {
