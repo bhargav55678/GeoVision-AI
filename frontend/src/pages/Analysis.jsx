@@ -17,9 +17,7 @@ import ComparisonResult from "../components/ComparisonResult";
 import AnalysisResultStats from "../components/AnalysisResultStats";
 import ActionButtons from "../components/ActionButtons";
 import ReportGenerator from "../components/ReportGenerator";
-
-
-const API_URL = "https://geovision-ai-f3h3.onrender.com";
+import { API_BASE_URL } from "../config";
 
 
 const Analysis = () => {
@@ -654,7 +652,7 @@ const Analysis = () => {
           "
           style={{
             backgroundImage:
-              "url('https://geovision-ai-f3h3.onrender.com/uploads/earth.jpg')",
+              `url('${API_BASE_URL}/uploads/earth.jpg')`,
           }}
         />
 
@@ -936,7 +934,7 @@ const Analysis = () => {
                   "
                   style={{
                     backgroundImage:
-                      "url('https://geovision-ai-f3h3.onrender.com/uploads/earth.jpg')",
+                      `url('${API_BASE_URL}/uploads/earth.jpg')`,
                   }}
                 >
 
@@ -1138,7 +1136,7 @@ const Analysis = () => {
                         );
 
                       window.open(
-                        `${API_URL}/${imagePath}`,
+                        `${API_BASE_URL}/${imagePath}`,
                         "_blank"
                       );
 

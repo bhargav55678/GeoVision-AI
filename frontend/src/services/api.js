@@ -1,6 +1,6 @@
-const API_URL = "https://geovision-ai-f3h3.onrender.com";
+import { API_BASE_URL } from "../config";
 
 export async function getHealth() {
-  const response = await fetch(`${API_URL}/health`);
+  const response = await fetch(`${API_BASE_URL}/health`);
   return await response.json();
 }

@@ -13,8 +13,7 @@ import {
 } from "lucide-react";
 
 import Sidebar from "../components/layout/Sidebar";
-
-const API_URL = "https://geovision-ai-f3h3.onrender.com";
+import { API_BASE_URL } from "../config";
 
 const Settings = () => {
   const [backendStatus, setBackendStatus] = useState("Checking...");
@@ -34,7 +33,7 @@ const Settings = () => {
       setChecking(true);
       setBackendStatus("Checking...");
 
-      const response = await fetch(`${API_URL}/health`);
+      const response = await fetch(`${API_BASE_URL}/health`);
 
       if (!response.ok) {
         throw new Error("Backend unavailable");
@@ -471,7 +470,7 @@ const Settings = () => {
               </p>
 
               <div className="bg-[#0a0e14] border border-[#3a494b] rounded-lg px-4 py-4 font-mono text-sm text-[#00dbe7]">
-                {API_URL}
+                {API_BASE_URL}
               </div>
 
             </div>

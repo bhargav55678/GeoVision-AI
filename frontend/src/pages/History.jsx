@@ -14,8 +14,7 @@ import {
   ChevronDown,
   Activity,
 } from "lucide-react";
-
-const API_URL = "https://geovision-ai-f3h3.onrender.com";
+import { API_BASE_URL } from "../config";
 
 const History = () => {
   const [history, setHistory] = useState([]);
@@ -37,7 +36,7 @@ const History = () => {
       setLoading(true);
       setError("");
 
-      const response = await fetch(`${API_URL}/history/`);
+      const response = await fetch(`${API_BASE_URL}/history/`);
 
       if (!response.ok) {
         throw new Error("Failed to load analysis history.");
@@ -1033,7 +1032,7 @@ const History = () => {
                           {imagePath ? (
 
                             <img
-                              src={`${API_URL}/${imagePath}`}
+                              src={`${API_BASE_URL}/${imagePath}`}
                               alt={`Analysis ${item.id}`}
                               className={`
                                 h-full

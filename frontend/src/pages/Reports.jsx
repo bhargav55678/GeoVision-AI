@@ -12,8 +12,7 @@ import {
 } from "lucide-react";
 
 import Sidebar from "../components/layout/Sidebar";
-
-const API_URL = "http://127https://geovision-ai-f3h3.onrender.com.0.0.1:8000";
+import { API_BASE_URL } from "../config";
 
 const Reports = () => {
   const [reports, setReports] = useState([]);
@@ -29,7 +28,7 @@ const Reports = () => {
     try {
       setLoading(true);
 
-      const response = await fetch(`${API_URL}/history/`);
+      const response = await fetch(`${API_BASE_URL}/history/`);
 
       if (!response.ok) {
         throw new Error("Failed to load reports");
@@ -53,10 +52,10 @@ const Reports = () => {
       .replace(/^\/+/, "");
 
     if (cleanPath.startsWith("uploads/")) {
-      return `${API_URL}/${cleanPath}`;
+      return `${API_BASE_URL}/${cleanPath}`;
     }
 
-    return `${API_URL}/uploads/${cleanPath}`;
+    return `${API_BASE_URL}/uploads/${cleanPath}`;
   };
 
   const filteredReports = useMemo(() => {

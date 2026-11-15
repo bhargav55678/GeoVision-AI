@@ -1,5 +1,6 @@
 import jsPDF from "jspdf";
 import { DocumentArrowDownIcon } from "@heroicons/react/24/outline";
+import { API_BASE_URL } from "../config";
 
 const ReportGenerator = ({ result }) => {
 
@@ -100,17 +101,17 @@ const ReportGenerator = ({ result }) => {
       // COMPARISON IMAGE
       // =====================================
 
-      const imageUrl =
-        `https://geovision-ai-f3h3.onrender.com/${result.comparison_image.replace(
-          /\\/g,
-          "/"
-        )}`;
+      const imagePath = result.comparison_image
+        .replace(/\\/g, "/")
+        .replace(/^\/+/, "");
+      const imageUrl = imagePath.startsWith("uploads/")
+        ? `${API_BASE_URL}/${imagePath}`
+        : `${API_BASE_URL}/uploads/${imagePath}`;
 
 
       const response = await fetch(imageUrl, {
         method: "GET",
         mode: "cors",
-        credentials: "include",
       });
 
 

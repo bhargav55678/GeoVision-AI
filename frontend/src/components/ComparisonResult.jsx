@@ -1,4 +1,5 @@
 import { PhotoIcon } from "@heroicons/react/24/outline";
+import { API_BASE_URL } from "../config";
 
 const ComparisonResult = ({ result }) => {
   if (!result) {
@@ -10,8 +11,9 @@ const ComparisonResult = ({ result }) => {
     "/"
   );
 
-  const imageUrl =
-    `https://geovision-ai-f3h3.onrender.com/${imagePath}`;
+  const imageUrl = imagePath.startsWith("uploads/")
+    ? `${API_BASE_URL}/${imagePath}`
+    : `${API_BASE_URL}/uploads/${imagePath}`;
 
   return (
     <div

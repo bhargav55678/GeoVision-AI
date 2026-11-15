@@ -13,8 +13,7 @@ import {
 } from "lucide-react";
 
 import Sidebar from "../components/layout/Sidebar";
-
-const API_URL = "http://127.0.0.https://geovision-ai-f3h3.onrender.com1:8000";
+import { API_BASE_URL } from "../config";
 
 const HistoryDetails = () => {
   const { id } = useParams();
@@ -31,7 +30,7 @@ const HistoryDetails = () => {
       setLoading(true);
 
       const response = await fetch(
-        `${API_URL}/history/${id}`
+        `${API_BASE_URL}/history/${id}`
       );
 
       if (!response.ok) {
@@ -60,10 +59,10 @@ const HistoryDetails = () => {
       .replace(/^\/+/, "");
 
     if (cleanPath.startsWith("uploads/")) {
-      return `${API_URL}/${cleanPath}`;
+      return `${API_BASE_URL}/${cleanPath}`;
     }
 
-    return `${API_URL}/uploads/${cleanPath}`;
+    return `${API_BASE_URL}/uploads/${cleanPath}`;
   };
 
   const detected =

@@ -1,8 +1,8 @@
-const API_URL = "https://geovision-ai-f3h3.onrender.com";
+import { API_BASE_URL } from "./config";
 
 // Backend Health
 export async function getHealth() {
-  const response = await fetch(`${API_URL}/health`);
+  const response = await fetch(`${API_BASE_URL}/health`);
   return await response.json();
 }
 
@@ -13,7 +13,7 @@ export async function compareImages(beforeImage, afterImage) {
   formData.append("before", beforeImage);
   formData.append("after", afterImage);
 
-  const response = await fetch(`${API_URL}/compare`, {
+  const response = await fetch(`${API_BASE_URL}/compare`, {
     method: "POST",
     body: formData,
   });

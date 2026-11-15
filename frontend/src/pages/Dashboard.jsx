@@ -14,8 +14,7 @@ import { getHealth } from "../services/api";
 import AnalyticsStats from "../components/AnalyticsStats";
 import AnalysisChart from "../components/AnalysisChart";
 import AnalysisTrendChart from "../components/AnalysisTrendChart";
-
-const API_URL = "https://geovision-ai-f3h3.onrender.com";
+import { API_BASE_URL } from "../config";
 
 const Dashboard = () => {
 
@@ -49,7 +48,7 @@ const Dashboard = () => {
         // -----------------------------
 
         const response = await fetch(
-          `${API_URL}/analytics/`
+          `${API_BASE_URL}/analytics/`
         );
 
         if (!response.ok) {
@@ -218,7 +217,7 @@ const Dashboard = () => {
   "
   style={{
     backgroundImage:
-      "url('https://geovision-ai-f3h3.onrender.com/uploads/earth.jpg')",
+      `url('${API_BASE_URL}/uploads/earth.jpg')`,
   }}
 />
 
@@ -568,7 +567,7 @@ const RecentAnalyses = () => {
       try {
 
         const response = await fetch(
-          `${API_URL}/history/`
+          `${API_BASE_URL}/history/`
         );
 
         if (!response.ok) {
