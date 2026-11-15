@@ -101,7 +101,7 @@ const ReportGenerator = ({ result }) => {
       // =====================================
 
       const imageUrl =
-        `http://localhost:8000/${result.comparison_image.replace(
+        `https://geovision-ai-f3h3.onrender.com/${result.comparison_image.replace(
           /\\/g,
           "/"
         )}`;
